@@ -19,7 +19,7 @@ jobs:
           node-version: '20'
 
       - name: Inicializar projeto React Native temporário
-        run: npx @react-native-community/cli init SonicSphere --version latest
+        run: npx @react-native-community/cli init tempproject --version latest
 
       - name: Mover arquivos para a raiz
         run: |
