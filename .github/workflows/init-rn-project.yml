@@ -1,0 +1,44 @@
+name: Inicializar Projeto React Native
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  init:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Inicializar projeto React Native temporário
+        run: npx @react-native-community/cli init SonicSphere --version latest
+
+      - name: Mover arquivos para a raiz
+        run: |
+          mv tempproject/* .
+          mv tempproject/.* .
+          rm -rf tempproject
+
+      - name: Configurar Git
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+
+      - name: Adicionar e commitar mudanças
+        run: |
+          git add .
+          git commit -m "Inicializa projeto React Native na raiz do repositório" || echo "Nenhuma mudança para commitar"
+
+      - name: Push mudanças
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref }}
